@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+const base=process.env.TEST_BASE_URL || 'http://localhost:3000';
+const go=(path,opts={})=>fetch(base+path,{redirect:'manual',...opts});
+assert.equal((await go('/')).headers.get('location'),'/dashboard');
+assert.equal((await go('/dashboard')).status,200);
+assert.equal((await go('/api/backend/leads')).status,200);
+assert.equal((await go('/api/backend/followups')).status,404);
+assert.equal((await go('/api/backend/availability?business_id=1&workspace=1')).status,200);
+assert.equal((await go('/api/backend/chat/1')).status,401);
+assert.equal((await go('/api/backend/leads',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://wrong.example'},body:'{}'})).status,403);
+assert.equal((await go('/login')).status,404);
+console.log('PASS: dashboard opens without login, workspace APIs work, customer sessions and request-origin checks remain functional.');

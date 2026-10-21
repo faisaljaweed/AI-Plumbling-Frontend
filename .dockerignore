@@ -1,0 +1,7 @@
+node_modules
+.next
+.git
+.env
+.env.*
+!.env.example
+LOCAL-ADMIN.txt
